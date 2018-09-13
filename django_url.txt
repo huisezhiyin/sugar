@@ -1,0 +1,24 @@
+url:
+
+from rest_framework.routers import DefaultRouter
+from app_ex.work_ex import views
+from django.conf.urls import url
+
+router = DefaultRouter()
+router.register(r'test', views.Test, base_name="test")
+urlpatterns = [
+    url(r'^(\S+)/hello/', views.hello, name="s"),
+]
+urlpatterns += router.urls
+
+view:
+def hello(request, a):
+    # 匹配前置url
+    return HttpResponse("a{0}".format(a))
+
+
+class Test(GenericViewSet):
+    # 匹配任意后置的url
+    @action(detail=False, url_path=r".+?")
+    def test(self, request, *args, **kwargs):
+        return Response({"kw": request.path})
