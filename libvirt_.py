@@ -18,9 +18,7 @@ for i in conn.listDomainsID():
     # print dom.name(), "{0}%".format(usage)
     data[dom.name()]["cpu"] = "{0}%".format(usage)
     # memory
-    domain = conn.lookupByID(id)
-    domain.setMemoryStatsPeriod(10)
-    meminfo = domain.memoryStats()
+    meminfo = dom.memoryStats()
     free_mem = float(meminfo['unused'])
     total_mem = float(meminfo['available'])
     util_mem = ((total_mem - free_mem) / total_mem) * 100
@@ -41,11 +39,11 @@ for i in conn.listDomainsID():
         read_2 = ifaceinfo_2[0]
         write_2 = ifaceinfo_2[4]
 
-    tree = ElementTree.fromstring(domain.XMLDesc())
+    tree = ElementTree.fromstring(dom.XMLDesc())
     devices = tree.findall('devices/disk/target')
     for d in devices:
         device = d.get('dev')
-        devstats = domain.blockStats(device)
-        print domain.name(), device, devstats
+        devstats = dom.blockStats(device)
+        print dom.name(), device, devstats
         rd_bytes = devstats[1]
         wr_bytes = devstats[3]
